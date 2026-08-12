@@ -9,6 +9,13 @@ docs_dir: .
 # its own temp dir and ignores this value.
 site_dir: /tmp/system-design-site
 
+# Keep tooling and theme-override files out of the rendered site content.
+# (The PWA assets — manifest.webmanifest, sw.js, pwa/ — are intentionally NOT
+# excluded so they get copied into the site and served.)
+exclude_docs: |
+  /overrides/
+  requirements-docs.txt
+
 # Chapters reference their PNG diagrams with raw <img src="./images/..."> tags.
 # MkDocs does not rewrite links inside raw HTML, so keep each rendered page at
 # the same directory depth as its source .md file (no per-page subfolders).
@@ -20,6 +27,7 @@ plugins:
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     - scheme: default
       primary: indigo
