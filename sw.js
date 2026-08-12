@@ -2,10 +2,12 @@
  * Strategy:
  *   - Precache a small app shell on install (home page + manifest + icons).
  *   - Navigations: network-first, fall back to cache, then to the home page.
- *   - Other same-origin GETs (CSS/JS/images/pages): stale-while-revalidate.
- * All URLs are relative to the SW scope so it also works under a subpath.
+ *   - Other same-origin GETs (CSS/JS/images/pages): cache-first with a
+ *     background revalidate (stale-while-revalidate).
+ * Every branch resolves to a real Response so a fetch never hangs.
+ * URLs are relative to the SW scope so it also works under a subpath.
  */
-const VERSION = "v1";
+const VERSION = "v3";
 const CACHE = "sd-notes-" + VERSION;
 
 const APP_SHELL = [
@@ -39,41 +41,56 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+async function handleNavigate(req) {
+  const cache = await caches.open(CACHE);
+  try {
+    const res = await fetch(req);
+    cache.put(req, res.clone());
+    return res;
+  } catch (e) {
+    return (
+      (await cache.match(req)) ||
+      (await cache.match("./index.html")) ||
+      Response.error()
+    );
+  }
+}
+
+async function handleAsset(req) {
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(req);
+  if (cached) {
+    fetch(req)
+      .then((res) => {
+        if (res && res.ok) cache.put(req, res.clone());
+      })
+      .catch(() => {});
+    return cached;
+  }
+  try {
+    const res = await fetch(req);
+    if (res && res.ok) cache.put(req, res.clone());
+    return res;
+  } catch (e) {
+    return Response.error();
+  }
+}
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
 
-  const url = new URL(req.url);
+  let url;
+  try {
+    url = new URL(req.url);
+  } catch (e) {
+    return;
+  }
   if (url.origin !== self.location.origin) return;
 
   if (req.mode === "navigate") {
-    event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((cache) => cache.put(req, copy));
-          return res;
-        })
-        .catch(() =>
-          caches
-            .match(req)
-            .then((cached) => cached || caches.match("./index.html"))
-        )
-    );
-    return;
+    event.respondWith(handleNavigate(req));
+  } else {
+    event.respondWith(handleAsset(req));
   }
-
-  event.respondWith(
-    caches.open(CACHE).then((cache) =>
-      cache.match(req).then((cached) => {
-        const network = fetch(req)
-          .then((res) => {
-            if (res && res.status === 200) cache.put(req, res.clone());
-            return res;
-          })
-          .catch(() => cached);
-        return cached || network;
-      })
-    )
-  );
 });
