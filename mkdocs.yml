@@ -1,0 +1,83 @@
+site_name: System Design Interview Notes
+site_description: Notes based on "System Design Interview - An Insider's Guide" (Vol 1 & 2)
+
+# The Markdown chapters live at the repository root (one folder per chapter),
+# alongside their PNG diagrams. The same-dir plugin lets MkDocs use the repo
+# root as the docs directory without moving any files.
+docs_dir: .
+# Build output must live outside docs_dir (the repo root); `mkdocs serve` uses
+# its own temp dir and ignores this value.
+site_dir: /tmp/system-design-site
+
+# Chapters reference their PNG diagrams with raw <img src="./images/..."> tags.
+# MkDocs does not rewrite links inside raw HTML, so keep each rendered page at
+# the same directory depth as its source .md file (no per-page subfolders).
+use_directory_urls: false
+
+plugins:
+  - same-dir
+  - search
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.top
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - toc.follow
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.highlight
+
+nav:
+  - Home: index.md
+  - "Ch 1. Scale From Zero To Millions Of Users": "01. Scaling/Readme.md"
+  - "Ch 2. Back-of-the-envelope Estimation": "02. Back Of the Envelope Estimation/Readme.md"
+  - "Ch 3. A Framework For System Design Interviews": "03. System Design Framework/Readme.md"
+  - "Ch 4. Design A Rate Limiter": "04. Rate Limiter/Readme.md"
+  - "Ch 5. Design Consistent Hashing": "05. Consistent Hashing/Readme.md"
+  - "Ch 6. Design A Key-Value Store": "06. Key-Value Store/Readme.md"
+  - "Ch 7. Design A Unique ID Generator": "07. Unique-Id Generator/Readme.md"
+  - "Ch 8. Design A URL Shortener": "08. URL Shortener/Readme.md"
+  - "Ch 9. Design A Web Crawler": "09. Web Crawler/Readme.md"
+  - "Ch 10. Design A Notification System": "10. Notification System/Readme.md"
+  - "Ch 11. Design A News Feed System": "11. News Feed System/Readme.md"
+  - "Ch 12. Design A Chat System": "12. Chat System/Readme.md"
+  - "Ch 13. Design A Search Autocomplete System": "13. Search Autocomplete/Readme.md"
+  - "Ch 14. Design YouTube": "14. Youtube/Readme.md"
+  - "Ch 15. Design Google Drive": "15. Google Drive/Readme.md"
+  - "Ch 16. Proximity Service": "16. Proximity Service/Readme.md"
+  - "Ch 17. Nearby Friends": "17. Nearby Friends/README.md"
+  - "Ch 18. Design Google Maps": "18. Google Maps/README.md"
+  - "Ch 19. Distributed Message Queue": "19. Distributed Message Queue/README.md"
+  - "Ch 20. Metrics Monitoring and Alerting System": "20. Metrics Monitoring and Alerting System/README.md"
+  - "Ch 21. Ad Click Event Aggregation": "21. Ad Click Event Aggregation/README.md"
+  - "Ch 22. Hotel Reservation System": "22. Hotel Reservation System/README.md"
+  - "Ch 23. Distributed Email Service": "23. Distributed Email Service/README.md"
+  - "Ch 24. S3-like Object Storage": "24. S3-like Object Storage/README.md"
+  - "Ch 25. Real-time Gaming Leaderboard": "25. Real-time Gaming Leaderboard/README.md"
+  - "Ch 26. Payment System": "26. Payment System/README.md"
+  - "Ch 27. Digital Wallet": "27.  Digital Wallet/README.md"
+  - "Ch 28. Stock Exchange": "28. Stock Exchange/README.md"
