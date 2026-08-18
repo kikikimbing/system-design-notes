@@ -1,0 +1,17 @@
+{
+  "name": "System Design Notes docs preview",
+  "install": "pip install --user -r requirements-docs.txt",
+  "terminals": [
+    {
+      "name": "docs",
+      "command": "DISABLE_MKDOCS_2_WARNING=true python3 -m mkdocs serve --dev-addr 0.0.0.0:8000",
+      "description": "MkDocs Material live-reload server for the system design notes. Open http://localhost:8000 to browse the rendered chapters and diagrams."
+    }
+  ],
+  "ports": [
+    {
+      "name": "docs",
+      "port": 8000
+    }
+  ]
+}
