@@ -1,0 +1,5 @@
+# Documentation preview toolchain for the System Design notes.
+# Renders the Markdown chapters (and their PNG diagrams) as a browsable,
+# fully offline static site via `mkdocs serve` / `mkdocs build`.
+mkdocs-material==9.7.7
+mkdocs-same-dir==0.1.5
